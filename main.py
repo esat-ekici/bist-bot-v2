@@ -1,14 +1,26 @@
 import yfinance as yf
 from telegram_sender import send_message
+from symbols import SYMBOLS
 
-ticker = yf.Ticker("ASELS.IS")
+message = "📊 BIST TARAMA TESTİ\n\n"
 
-price = ticker.history(period="5d")["Close"].iloc[-1]
+for symbol in SYMBOLS:
 
-message = (
-    f"📊 Veri Testi\n\n"
-    f"Hisse: ASELS\n"
-    f"Son Fiyat: {price:.2f}"
-)
+    try:
+
+        df = yf.download(
+            symbol,
+            period="3mo",
+            auto_adjust=True,
+            progress=False
+        )
+
+        close = float(df["Close"].iloc[-1])
+
+        message += f"{symbol} : {close:.2f}\n"
+
+    except Exception as e:
+
+        message += f"{symbol} : HATA\n"
 
 send_message(message)
