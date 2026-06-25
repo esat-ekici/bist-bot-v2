@@ -15,12 +15,14 @@ for symbol in SYMBOLS:
             progress=False
         )
 
-        close = float(df["Close"].iloc[-1])
-
-        message += f"{symbol} : {close:.2f}\n"
+        message += (
+            f"{symbol}\n"
+            f"Satırlar: {len(df)}\n"
+            f"Sütunlar: {list(df.columns)}\n\n"
+        )
 
     except Exception as e:
 
-        message += f"{symbol} : HATA\n"
+        message += f"{symbol} : {str(e)}\n\n"
 
-send_message(message)
+send_message(message[:4000])
