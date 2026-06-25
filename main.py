@@ -1,27 +1,25 @@
-import yfinance as yf
-from telegram_sender import send_message
 from symbols import SYMBOLS
+from scanner import scan_symbol
+from telegram_sender import send_message
 
-message = "📊 BIST TARAMA TESTİ\n\n"
+message = "📊 BIST RAPORU\n\n"
 
 for symbol in SYMBOLS:
 
     try:
 
-        df = yf.download(
-            symbol,
-            period="3mo",
-            auto_adjust=True,
-            progress=False
+        result = scan_symbol(symbol)
+
+        message += (
+            f"{result['symbol']}\n"
+            f"Fiyat: {result['close']:.2f}\n"
+            f"RSI: {result['rsi']:.1f}\n"
+            f"SMA50: {'✅' if result['above_sma50'] else '❌'}\n"
+            f"SMA200: {'✅' if result['above_sma200'] else '❌'}\n\n"
         )
-
-        close = df[("Close", symbol)]
-        last_close = float(close.iloc[-1])
-
-        message += f"{symbol}: {last_close:.2f}\n"
 
     except Exception as e:
 
-        message += f"{symbol}: HATA - {str(e)}\n"
+        message += f"{symbol}: HATA\n\n"
 
-send_message(message)
+send_message(message[:4000])
