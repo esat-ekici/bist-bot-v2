@@ -1,5 +1,3 @@
-import pandas as pd
-
 def calculate_indicators(close):
 
     sma50 = close.rolling(50).mean()
