@@ -2,7 +2,7 @@ from symbols import SYMBOLS
 from scanner import scan_symbol
 from telegram_sender import send_message
 
-message = "📊 BIST RAPORU\n\n"
+results = []
 
 for symbol in SYMBOLS:
 
@@ -10,20 +10,28 @@ for symbol in SYMBOLS:
 
         result = scan_symbol(symbol)
 
-        message += (
-            f"{result['symbol']}\n"
-            f"Fiyat: {result['close']}\n"
-            f"RSI: {result['rsi']}\n"
-            f"SMA50: {'✅' if result['above_sma50'] else '❌'}\n"
-            f"SMA200: {'✅' if result['above_sma200'] else '❌'}\n"
-            f"Hacim20/60: {result['volume_growth']}\n"
-            f"RelVol: {result['rel_volume']}\n"
-            f"52H Zirve Uzaklık: %{result['distance_to_high']}\n"
-            f"Sinyal: {'🔥' if result['signal'] else '-'}\n\n"
-        )
+        results.append(result)
 
-    except Exception as e:
+    except Exception:
 
-        message += f"{symbol}: HATA ({str(e)})\n\n"
+        pass
+
+results.sort(
+    key=lambda x: x["score"],
+    reverse=True
+)
+
+message = "📊 BIST KURUMSAL TOPLAMA TARAMASI\n\n"
+
+for r in results:
+
+    message += (
+        f"{r['symbol']}\n"
+        f"Skor: {r['score']}/13\n"
+        f"RSI: {r['rsi']}\n"
+        f"Hacim20/60: {r['volume_growth']}\n"
+        f"52H Zirve Uzaklık: %{r['distance_to_high']}\n"
+        f"Haftalık MACD: {'✅' if r['macd_positive'] else '❌'}\n\n"
+    )
 
 send_message(message[:4000])
