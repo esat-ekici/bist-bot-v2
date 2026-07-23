@@ -1,0 +1,22 @@
+# Telegram
+
+TELEGRAM_TOKEN = ""
+TELEGRAM_CHAT_ID = ""
+
+# Tarama
+
+INTERVAL = "1d"
+PERIOD = "2y"
+
+# Filtreler
+
+MIN_RVOL = 1.5
+MIN_SCORE = 70
+
+EMA_FAST = 20
+EMA_MID = 50
+EMA_SLOW = 200
+
+RSI_LENGTH = 14
+
+ATR_LENGTH = 14
